@@ -11,3 +11,5 @@ public class PmsApplication {
 	}
 
 }
+
+// folder common for put Global or Shared
