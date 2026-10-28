@@ -1,6 +1,7 @@
 package com.example.PMS.products.entity;
 
 import com.example.PMS.category.entity.CategoryEntity;
+import com.example.PMS.products.enums.DiscountType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +25,6 @@ public class ProductEntity {
     @Column(nullable = false)
     private String name;
 
-
-
     private String description;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -37,6 +36,13 @@ public class ProductEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id",nullable = false)
     private CategoryEntity category;
+
+    @Column(nullable = false,length = 20)
+    @Enumerated(EnumType.STRING)
+    private DiscountType discountType = DiscountType.NONE;
+
+    @Column(nullable = false,precision = 10,scale = 2)
+    private BigDecimal discountValue = BigDecimal.ZERO;
 
     @OneToMany(
             mappedBy = "product",

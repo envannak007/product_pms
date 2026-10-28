@@ -6,6 +6,7 @@ public record CategoryResponse (
         Integer id,
         String name,
         String description,
+        String image,
         LocalDateTime createAt,
         LocalDateTime updateAt
 ){

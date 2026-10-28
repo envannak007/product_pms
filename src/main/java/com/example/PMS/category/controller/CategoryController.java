@@ -1,3 +1,4 @@
+
 package com.example.PMS.category.controller;
 
 import com.example.PMS.category.dto.request.CategoryRequest;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,55 +20,70 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
+
     private final CategoryService categoryService;
 
-
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping
-    public ResponseEntity<BaseResponse<CategoryResponse>> create(@Valid @RequestBody
-                                                                 CategoryRequest request){
+    @PostMapping(consumes = "multipart/form-data")
+    public ResponseEntity<BaseResponse<CategoryResponse>> create(
+            @Valid @ModelAttribute CategoryRequest request) throws IOException {
+
         CategoryResponse response = categoryService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.created(
-                "Category created successfully.",response
-        ));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                BaseResponse.created(
+                        "Category created successfully.", response
+                )
+        );
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<List<CategoryResponse>>> getAll(){
+    public ResponseEntity<BaseResponse<List<CategoryResponse>>> getAll() {
+
         List<CategoryResponse> response = categoryService.findAll();
+
         return ResponseEntity.ok(
-                BaseResponse.ok("Category retrieved successfully.",response)
+                BaseResponse.ok("Category retrieved successfully.", response)
         );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<CategoryResponse>> getById(
             @PathVariable Integer id
-    ){
+    ) {
+
         CategoryResponse response = categoryService.findById(id);
+
         return ResponseEntity.ok(
-                BaseResponse.ok("Category retrieved successfully.",response)
+                BaseResponse.ok("Category retrieved successfully.", response)
         );
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<BaseResponse<CategoryResponse>> update(
             @PathVariable Integer id,
-            @Valid @RequestBody CategoryRequest request
-    ){
-        CategoryResponse response = categoryService.update(id,request);
+            @Valid @ModelAttribute CategoryRequest request
+    ) throws IOException {
+
+        CategoryResponse response = categoryService.update(id, request);
+
         return ResponseEntity.ok(
-                BaseResponse.ok("Category updated successfully.",response)
+                BaseResponse.ok("Category updated successfully.", response)
         );
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<BaseResponse<Void>> delete(@PathVariable Integer id){
+    public ResponseEntity<BaseResponse<Void>> delete(
+            @PathVariable Integer id
+    ) throws IOException {
+
         categoryService.delete(id);
+
         return ResponseEntity.ok(
-                BaseResponse.ok("Category deleted successfully.",null)
+                BaseResponse.ok("Category deleted successfully.", null)
         );
     }
 }
+

@@ -1,5 +1,6 @@
 package com.example.PMS.products.dto.request;
 
+import com.example.PMS.products.enums.DiscountType;
 import jakarta.validation.constraints.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,12 @@ public record ProductRequest(
 
         @NotNull(message = "Category is required")
         Integer categoryId,
+
+        @NotNull(message = "Discount type is required")
+        DiscountType discountType,
+
+        @DecimalMin(value = "0.00",message = "Discount cannot be negative")
+        BigDecimal discountValue,
 
 
         List<MultipartFile> images

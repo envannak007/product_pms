@@ -20,6 +20,7 @@ public class CategoryMapper {
                 category.getId(),
                 category.getName(),
                 category.getDescription(),
+                category.getImageUrl(),
                 category.getCreateAt(),
                 category.getUpdateAt()
         );

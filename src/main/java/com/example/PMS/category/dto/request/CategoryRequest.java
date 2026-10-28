@@ -1,7 +1,9 @@
 package com.example.PMS.category.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 public record CategoryRequest(
         @NotBlank(message = "Name must not be black")
@@ -9,6 +11,9 @@ public record CategoryRequest(
         String name,
 
         @Size(max = 1000,message = "Description must to be less than 1000")
-        String description
+        String description,
+
+        @NotNull(message = "Image is required")
+        MultipartFile image
 ) {
 }

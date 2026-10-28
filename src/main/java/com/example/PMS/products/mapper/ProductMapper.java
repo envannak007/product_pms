@@ -4,11 +4,17 @@ import com.example.PMS.products.dto.request.ProductRequest;
 import com.example.PMS.products.dto.response.ProductResponse;
 import com.example.PMS.products.entity.ProductEntity;
 import com.example.PMS.products.entity.ProductImageEntity;
+import com.example.PMS.products.enums.DiscountType;
+import com.example.PMS.products.service.ProductDiscountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
-public class ProductMapper {
+import java.math.BigDecimal;
 
+@Component
+@RequiredArgsConstructor
+public class ProductMapper {
+    private final ProductDiscountService productDiscountService;
     public ProductEntity toEntity(ProductRequest request){
 
         ProductEntity productEntity = new ProductEntity();
@@ -17,6 +23,8 @@ public class ProductMapper {
         productEntity.setDescription(request.description());
         productEntity.setPrice(request.price());
         productEntity.setStock(request.stock());
+        productEntity.setDiscountValue(request.discountValue() != null ? request.discountValue() : BigDecimal.ZERO);
+        productEntity.setDiscountType(request.discountType() != null ? request.discountType() : DiscountType.NONE);
 
         return productEntity;
     }
@@ -31,6 +39,10 @@ public class ProductMapper {
                 productEntity.getGtin(),
                 productEntity.getCategory().getId(),
                 productEntity.getCategory().getName(),
+                productEntity.getDiscountType(),
+                productEntity.getDiscountValue(),
+                productDiscountService.calculateDiscountAmount(productEntity),
+                productDiscountService.calculateFinalPrice(productEntity),
                 productEntity.getImage()
                         .stream()
                         .map(ProductImageEntity::getImageUrl)
@@ -46,5 +58,7 @@ public class ProductMapper {
         productEntity.setDescription(request.description());
         productEntity.setPrice(request.price());
         productEntity.setStock(request.stock());
+        productEntity.setDiscountValue(request.discountValue() != null ? request.discountValue() : BigDecimal.ZERO);
+        productEntity.setDiscountType(request.discountType() != null ? request.discountType() : DiscountType.NONE);
     }
 }

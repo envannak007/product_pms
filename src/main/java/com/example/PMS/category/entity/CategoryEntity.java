@@ -29,6 +29,12 @@ public class CategoryEntity {
     @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false,length = 500)
+    private String imageUrl;
+
+    @Column(nullable = false,length = 500)
+    private String publicId;
+
     @CreationTimestamp
     private LocalDateTime createAt;
 

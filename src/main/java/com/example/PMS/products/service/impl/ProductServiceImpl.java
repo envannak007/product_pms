@@ -12,12 +12,14 @@ import com.example.PMS.products.repository.ProductImageRepository;
 import com.example.PMS.products.repository.ProductRepository;
 import com.example.PMS.config.cloudinary.CloudinaryService;
 import com.example.PMS.products.service.GTINService;
+import com.example.PMS.products.service.ProductDiscountService;
 import com.example.PMS.products.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -30,12 +32,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductImageRepository productImageRepository;
     private final ProductMapper productMapper;
     private final GTINService gtinService;
+    private final ProductDiscountService productDiscountService;
 
     @Override
     public ProductResponse create(ProductRequest request) throws IOException {
 
         CategoryEntity category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(()->new ResourceNotFoundException("Category not found with id : "+ request.categoryId()));
+
 
         ProductEntity product = productMapper.toEntity(request);
         product.setGtin(gtinService.createGtin13());
@@ -59,8 +63,8 @@ public class ProductServiceImpl implements ProductService {
                 ProductImageEntity imageEntity = new ProductImageEntity();
                 imageEntity.setImageUrl(imageUrl);
                 imageEntity.setPublicId(publicId);
-                imageEntity.setProduct(product);
-                // save image
+                imageEntity.setProduct(saved);
+
                 productImageRepository.save(imageEntity);
                 saved.getImage().add(imageEntity);
             }
@@ -148,12 +152,9 @@ public class ProductServiceImpl implements ProductService {
 
                 imageEntity.setImageUrl(imageUrl);
                 imageEntity.setPublicId(publicId);
-                imageEntity.setProduct(product);
+                imageEntity.setProduct(updated);
 
-                // save image
                 productImageRepository.save(imageEntity);
-
-                // add to product
                 updated.getImage().add(imageEntity);
             }
         }
